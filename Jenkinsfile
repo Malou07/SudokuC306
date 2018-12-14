@@ -2,8 +2,17 @@ pipeline {
   agent any
   stages {
     stage('check') {
-      steps {
-        checkstyle(canComputeNew: true)
+      parallel {
+        stage('check') {
+          steps {
+            checkstyle(canComputeNew: true)
+          }
+        }
+        stage('findbugs') {
+          steps {
+            catchError()
+          }
+        }
       }
     }
     stage('cobertura') {
